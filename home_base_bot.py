@@ -14,7 +14,7 @@ labor_perday=0
 magic_perday=0
 upkeep_perday=0
 
-
+discord_token=""
 #get details from file
 
 def load_stats():
@@ -26,6 +26,12 @@ def load_stats():
     
     print (resource_totals())
     
+def load_discord_token():
+    with open("key.txt","r") as f:
+        discord_token=f.readline()
+    
+    
+
 
 #return a string that can be logged or printed
 def resource_totals():
@@ -75,4 +81,4 @@ async def on_message(message):
         
         
 load_stats()
-client.run("NjM0MjQ4Njc3NDE3ODExOTg3.XafwZA.rvJemBl-ZxlFndGxevwKEGrLXHg")
+client.run(discord_token)
