@@ -110,17 +110,23 @@ def load_discord_token():
 
 
 def random_event(town):
-    with open('events.csv', mode='r') as csv_file:
-        csv_reader = csv.DictReader(csv_file)
+    roll = random.randint(1, 2)
+    with open('events.csv', 'r') as csv_file:
+        csv_reader = csv.DictReader(csv_file, delimiter=',', quotechar='|')
         line_count = 0
         for row in csv_reader:
             if line_count == 0:
-                print(f'Column names are {", ".join(row)}')
+                print("loading event")
                 line_count += 1
-            print(
-                f'\t{row["name"]} works in the {row["department"]} department, and was born in {row["birthday month"]}.')
-            line_count += 1
-        print(f'Processed {line_count} lines.')
+            print(row["roll"])
+            print(roll)
+
+            if int(row["roll"]) == roll:
+
+                print(row["text"])
+                pass
+
+        print("done")
 
 
 def upkeep_event(town_pass):
@@ -203,8 +209,10 @@ async def events_rotation():
             discord_channel = client.get_channel(town.get_channel())
             return_string = await sync_to_async(upkeep_event)(town)
 
-            await discord_channel.send(return_string)
-        await asyncio.sleep(5)
+            await sync_to_async(random_event)(town)
+
+           # await discord_channel.send(return_string)
+        await asyncio.sleep(500)
     print("?")
     pass
 
@@ -221,7 +229,7 @@ f.close()
 for each in towns:
     each.load_from_file()
     print(each.get_name())
-    print(each.get_channel())
+
 
 discord_token = load_discord_token()
 token = os.getenv('DISCORD_TOKEN')
