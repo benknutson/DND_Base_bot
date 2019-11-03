@@ -122,11 +122,9 @@ def random_event(town):
             print(roll)
 
             if int(row["roll"]) == roll:
-
                 print(row["text"])
+                return row["text"]
                 pass
-
-        print("done")
 
 
 def upkeep_event(town_pass):
@@ -203,16 +201,23 @@ async def on_message(message):
 async def events_rotation():
     await client.wait_until_ready()
     print("event rotation started")
+    rotation = 0
+
     while client.is_closed:
 
         for town in towns:
             discord_channel = client.get_channel(town.get_channel())
-            return_string = await sync_to_async(upkeep_event)(town)
-
-            await sync_to_async(random_event)(town)
-
-           # await discord_channel.send(return_string)
-        await asyncio.sleep(500)
+            if rotation == 3:
+                rotation = 0
+                return_string = await sync_to_async(upkeep_event)(town)
+                await discord_channel.send(return_string)
+            else:
+                return_string = await sync_to_async(random_event)(town)
+                rotation += 1
+                await discord_channel.send(return_string)
+        print(rotation)
+        await asyncio.sleep(10)
+        # 3600 seconds in an hour just in case you didnt already know that
     print("?")
     pass
 
@@ -229,7 +234,6 @@ f.close()
 for each in towns:
     each.load_from_file()
     print(each.get_name())
-
 
 discord_token = load_discord_token()
 token = os.getenv('DISCORD_TOKEN')
