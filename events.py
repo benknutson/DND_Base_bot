@@ -44,6 +44,7 @@ class Town:
 
     def set_res(self, res_pass):
         self._res = res_pass
+        self.save_to_file()
 
     def set_channel(self, channel_pass):
         self._channel = channel_pass
@@ -110,7 +111,7 @@ def load_discord_token():
 
 
 def random_event(town):
-    roll = random.randint(1, 2)
+    roll = random.randint(1, 6)
     with open('events.csv', 'r') as csv_file:
         csv_reader = csv.DictReader(csv_file, delimiter=',', quotechar='|')
         line_count = 0
@@ -118,13 +119,44 @@ def random_event(town):
             if line_count == 0:
                 print("loading event")
                 line_count += 1
-            print(row["roll"])
-            print(roll)
+            
 
             if int(row["roll"]) == roll:
-                print(row["text"])
-                return row["text"]
+                #print(row["text"])
+                if row["code"]=="pincrease":
+                    res=town.get_res()
+                    percent=(int(row["amount"]))/100#convert to decimal cause of reasons
+                    
+                    res[row["resource"]]=(percent*res[row["resource"]])+res[row["resource"]]
+                    town.set_res(res)
+                    pass
+                elif row["code"]=="pdecrease":
+                    res=town.get_res()
+                    percent=(int(row["amount"]))/100#convert to decimal cause of reasons
+                    
+                    res[row["resource"]]=res[row["resource"]]-(percent*res[row["resource"]])
+                    town.set_res(res)
+                    pass
+                 
+                elif row["code"]=="increase":
+                    res=town.get_res()
+                                    
+                    res[row["resource"]]+=int(row["amount"])
+                    town.set_res(res)
+                 #   pass
+                elif row["code"]=="decrease":
+                    res=town.get_res()
+                                    
+                    res[row["resource"]]+=int(-row["amount"])
+                    town.set_res(res)
+                 #   pass
+                
+                return "Random event:"+row["text"]
+                
                 pass
+
+
+#event codes: pincrease(percentile increase), pdecrease(percentile decrease), increase and decrease, other. 
 
 
 def upkeep_event(town_pass):
@@ -147,7 +179,7 @@ def upkeep_event(town_pass):
         return_string = "Good day, profit =(income-upkeep)*1.5 50% more profit\n Income =" + str(
             -res["upkeep"] + 1.5 * (res["income"]))
     elif 80 < roll < 91:
-        res["treasury"] = int(res[6] - res["upkeep"] + 1.75 * (res["income"]))
+        res["treasury"] = int(res["treasury"] - res["upkeep"] + 1.75 * (res["income"]))
         return_string = "Good day, profit =(income-upkeep)*1.75 75% more profit\n Income =" + str(
             -res["upkeep"] + 1.75 * (res["income"]))
     elif 90 < roll < 101:

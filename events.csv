@@ -1,3 +1,7 @@
-roll,text,code,amount
-1, this is a test 1, 1, 10
-2,this is a test 2, 2, 20
+roll,text,code,amount,resource
+1,Bandits harass the town, lose 10% of treasury,pincrease,10,treasury
+2,Traveling merchants come by and purchase goods from the town. Gain gold equal to 10% of income,pincrease,10,treasury
+3,Nothing happens,other,0,
+4,A group of monks bless the town as they travel through.  Divinity magic cast within the town is cast at one level higher and it is consecrated ground for the next session.,other,0,
+5,Townsfolk feel indebted to the leadership and offer to work double time. Gain 5 labor.,increase,5,labor
+6,New Townsfolk arrive from the surrounding areas. Population creases by 10,increase,10,population
