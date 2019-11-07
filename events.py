@@ -113,7 +113,7 @@ def load_discord_token():
 def random_event(town):
     roll = random.randint(1, 6)
     with open('events.csv', 'r') as csv_file:
-        csv_reader = csv.DictReader(csv_file, delimiter=',', quotechar='|')
+        csv_reader = csv.DictReader(csv_file, delimiter=';', quotechar='|')
         line_count = 0
         for row in csv_reader:
             if line_count == 0:
